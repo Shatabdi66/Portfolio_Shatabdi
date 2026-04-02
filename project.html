@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projects | Shatabdi Pal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #1a2e1c;
+      --cream: #f4f9f4;
+      --warm: #e8f2e9;
+      --accent: #267040;
+      --accent-light: #4caf6e;
+      --muted: #3d6647;
+      --nav-bg: #1a3a22;
+      --serif: 'Cormorant Garamond', Georgia, serif;
+      --sans: 'DM Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--cream);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--nav-bg);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 0 2.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      height: 64px;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+    }
+    .nav-logo {
+      width: 44px; height: 44px;
+      border-radius: 50%; object-fit: cover;
+      border: 2px solid var(--accent); flex-shrink: 0;
+    }
+    .nav-links { display: flex; gap: .25rem; list-style: none; margin-left: auto; flex-wrap: wrap; }
+    .nav-links a {
+      color: rgba(255,255,255,.75); text-decoration: none;
+      font-size: .8rem; font-weight: 400;
+      letter-spacing: .08em; text-transform: uppercase;
+      padding: .4rem .8rem; border-radius: 4px;
+      transition: color .2s, background .2s;
+    }
+    .nav-links a:hover { color: #fff; background: rgba(255,255,255,.07); }
+    .nav-links a.active { color: var(--accent); }
+    .dropdown { position: relative; }
+    .dropdown-menu {
+      display: none; position: absolute;
+      top: calc(100% + 8px); left: 0;
+      background: #1a3a22;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 8px; overflow: hidden;
+      min-width: 160px; box-shadow: 0 12px 32px rgba(0,0,0,.5);
+    }
+    .dropdown:hover .dropdown-menu { display: block; }
+    .dropdown-menu a {
+      display: block; padding: .6rem 1rem;
+      color: rgba(255,255,255,.75); font-size: .78rem;
+      text-transform: none; letter-spacing: 0; border-radius: 0;
+    }
+    .dropdown-menu a:hover { background: rgba(255,255,255,.07); color: #fff; }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      background: var(--nav-bg);
+      padding: 4rem 8vw 3.5rem;
+      position: relative; overflow: hidden;
+    }
+    .page-header::before {
+      content: '';
+      position: absolute; right: 8vw; top: 50%; transform: translateY(-50%);
+      font-family: var(--serif); font-size: 14rem; font-weight: 300;
+      color: rgba(255,255,255,.03); line-height: 1;
+      pointer-events: none; white-space: nowrap;
+    }
+    .page-header::after {
+      content: '';
+      position: absolute; right: -60px; bottom: -60px;
+      width: 280px; height: 280px; border-radius: 50%;
+      border: 1px solid rgba(46,125,70,.1); pointer-events: none;
+    }
+    .eyebrow {
+      font-size: .72rem; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1rem;
+      display: flex; align-items: center; gap: .75rem;
+    }
+    .eyebrow::before { content: ''; display: block; width: 32px; height: 1px; background: var(--accent); }
+    .page-header h1 {
+      font-family: var(--serif); font-weight: 300;
+      font-size: clamp(2.8rem, 5vw, 5rem);
+      color: #fff; line-height: 1.0;
+    }
+    .page-header h1 em { font-style: italic; color: var(--accent-light); }
+    .page-header p {
+      margin-top: 1.25rem;
+      font-size: .95rem; color: rgba(255,255,255,.45);
+      max-width: 480px; line-height: 1.7;
+    }
+
+    /* ── PROJECT GRID ── */
+    main {
+      flex: 1;
+      padding: 5rem 8vw;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 2rem;
+      align-items: start;
+    }
+
+    /* ── PROJECT CARD ── */
+    .project-card {
+      background: #e8f2e9;
+      border: 1px solid rgba(46,125,70,.15);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow .25s, border-color .25s, transform .25s;
+      animation: fadeUp .55s ease both;
+    }
+    .project-card:hover {
+      box-shadow: 0 12px 40px rgba(46,125,70,.12);
+      border-color: rgba(46,125,70,.45);
+      transform: translateY(-3px);
+    }
+    .project-card:nth-child(2) { animation-delay: .1s; }
+    .project-card:nth-child(3) { animation-delay: .2s; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* number badge */
+    .card-top {
+      padding: 1.75rem 1.75rem 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .project-num {
+      font-family: var(--serif);
+      font-size: 3rem;
+      font-weight: 300;
+      color: rgba(46,125,70,.18);
+      line-height: 1;
+      flex-shrink: 0;
+      user-select: none;
+    }
+    .lang-badge {
+      font-size: .68rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: .25rem .7rem;
+      border-radius: 100px;
+      border: 1px solid rgba(46,125,70,.3);
+      color: var(--accent);
+      white-space: nowrap;
+      height: fit-content;
+    }
+
+    .card-body { padding: .75rem 1.75rem 1.75rem; flex: 1; display: flex; flex-direction: column; }
+
+    .card-title {
+      font-family: var(--serif);
+      font-size: 1.35rem;
+      font-weight: 400;
+      color: var(--ink);
+      line-height: 1.3;
+      margin-bottom: .75rem;
+    }
+
+    .card-desc {
+      font-size: .875rem;
+      line-height: 1.8;
+      color: #2e5438;
+      flex: 1;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: .75rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-code {
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      text-decoration: none;
+      font-size: .75rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #f4f9f4;
+      background: var(--ink);
+      padding: .6rem 1.25rem;
+      border-radius: 100px;
+      border: 1px solid transparent;
+      transition: background .2s, color .2s;
+    }
+    .btn-code:hover { background: var(--accent); color: #fff; }
+
+    .assoc-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      font-size: .68rem;
+      letter-spacing: .06em;
+      color: var(--muted);
+      padding: .3rem .7rem;
+      border-radius: 100px;
+      border: 1px solid rgba(46,125,70,.2);
+      background: rgba(46,125,70,.06);
+    }
+
+    .card-skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+      margin-top: .9rem;
+      padding-top: .9rem;
+      border-top: 1px solid rgba(46,125,70,.12);
+    }
+
+    .btn-demo {
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      font-size: .75rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: transparent;
+      padding: .6rem 1.25rem;
+      border-radius: 100px;
+      border: 1px solid rgba(46,125,70,.4);
+      cursor: pointer;
+      transition: border-color .2s, background .2s, color .2s;
+    }
+    .btn-demo:hover {
+      border-color: var(--accent);
+      background: rgba(46,125,70,.06);
+    }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(10,26,15,.75);
+      backdrop-filter: blur(4px);
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .modal-overlay.open { display: flex; }
+
+    .modal-box {
+      background: #e8f2e9;
+      border-radius: 16px;
+      overflow: hidden;
+      max-width: 680px;
+      width: 100%;
+      box-shadow: 0 24px 64px rgba(0,0,0,.35);
+      animation: scaleIn .25s ease;
+    }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(.94); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--warm);
+    }
+    .modal-header h3 {
+      font-family: var(--serif); font-weight: 400; font-size: 1.2rem; color: var(--ink);
+    }
+    .modal-close {
+      background: none; border: none; cursor: pointer;
+      color: var(--muted); padding: .25rem; border-radius: 4px;
+      transition: color .2s;
+    }
+    .modal-close:hover { color: var(--ink); }
+
+    .modal-body { padding: 1.5rem; }
+    .modal-body img { width: 100%; border-radius: 8px; display: block; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--nav-bg);
+      padding: 1.25rem 2.5rem;
+      border-top: 1px solid rgba(255,255,255,.04);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    footer p { font-size: .72rem; color: rgba(255,255,255,.75); letter-spacing: .05em; }
+
+    @media (max-width: 600px) {
+      nav { padding: 0 1rem; }
+      .nav-links a { font-size: .72rem; padding: .35rem .5rem; }
+      main { padding: 3rem 5vw; grid-template-columns: 1fr; }
+      .page-header { padding: 3rem 5vw 2.5rem; }
+      footer { flex-direction: column; gap: .4rem; text-align: center; padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <img class="nav-logo" src="myLogo.jpg" alt="Logo" />
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="aboutme.html">About</a></li>
+      <li class="dropdown">
+        <a href="work.html">Work ▾</a>
+        <ul class="dropdown-menu">
+          <li><a href="work.html#education">Education</a></li>
+          <li><a href="work.html#skills">Technical Skills</a></li>
+          <li><a href="work.html#work">Work</a></li>
+          <li><a href="work.html#internship">Internship</a></li>
+        </ul>
+      </li>
+      <li><a href="project.html" class="active">Projects</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="eyebrow">Portfolio</div>
+    <h1>My <em>Projects</em></h1>
+    <p>Research and industry projects spanning clinical AI, business intelligence, NLP, data pipelines, and machine learning.</p>
+  </div>
+
+  <!-- PROJECT GRID -->
+  <main>
+
+    <!-- Card 1 -->
+    <div class="project-card">
+      <div class="card-top">
+        <span class="project-num">01</span>
+        <span class="lang-badge">Power BI · 2025</span>
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">Sales Insights Dashboard</h2>
+        <p class="card-desc">
+          Interactive Power BI dashboard offering a comprehensive view of key sales metrics, enabling 
+          the identification of trends, patterns, and business opportunities. Built in association with 
+          the American Red Cross using DAX, data modeling, and end-to-end data cleaning and visualization.
+        </p>
+        <div class="card-actions">
+          <a href="https://github.com/shatabdi-pal/Power-BI-Project" class="btn-code" target="_blank">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="project-card">
+      <div class="card-top">
+        <span class="project-num">02</span>
+        <span class="lang-badge">ML · EDA · 2024</span>
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">Bank Marketing Campaign — EDA &amp; Prediction</h2>
+        <p class="card-desc">
+          Developed a predictive model for ABC Bank to optimize marketing for a new term deposit product. 
+          Analyzed customer data from past interactions to forecast subscription likelihood, helping the bank 
+          focus resources on high-probability customers. Evaluated models with and without the 'duration' 
+          feature to ensure practical real-world applicability.
+        </p>
+        <div class="card-actions">
+          <a href="https://github.com/shatabdi-pal/Bank_Marketing_DataScience" class="btn-code" target="_blank">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="project-card">
+      <div class="card-top">
+        <span class="project-num">03</span>
+        <span class="lang-badge">AI · Clinical · 2026</span>
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">AI-Driven Clinical Decision Support for Diabetes</h2>
+        <p class="card-desc">
+          Conceptual research project designing and evaluating an AI-driven clinical decision support 
+          system (CDSS) for diabetes management. Assesses effectiveness across clinical outcomes, 
+          patient-centered measures, health-system impact, and ethical considerations using prospective, 
+          real-world, and equity-focused evaluation methods.
+        </p>
+        <div class="card-actions">
+          <a href="https://github.com/shatabdi-pal" class="btn-code" target="_blank">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="project-card">
+      <div class="card-top">
+        <span class="project-num">04</span>
+        <span class="lang-badge">ML · Healthcare · 2024</span>
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">Diabetes Readmission Prediction</h2>
+        <p class="card-desc">
+          Led comprehensive Exploratory Data Analysis to uncover patterns and address data quality 
+          issues — outliers, missing values — in a hospital readmission dataset. Identified critical 
+          factors influencing readmission rates for diabetes patients and provided actionable recommendations 
+          to improve healthcare outcomes and ML predictive accuracy.
+        </p>
+        <div class="card-actions">
+          <a href="https://github.com/shatabdi-pal" class="btn-code" target="_blank">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 5 -->
+    <div class="project-card">
+      <div class="card-top">
+        <span class="project-num">05</span>
+        <span class="lang-badge">NLP · LLM · 2023</span>
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">Fake News Detection with Diverse Model Approaches</h2>
+        <p class="card-desc">
+          Explored fine-tuned Pretrained Language Models (PLMs), Large Language Models (LLMs), and 
+          traditional ML models to classify real vs. fake news. Evaluated model performance using three 
+          datasets including Liar and WELFake, comparing effectiveness across approaches for misinformation detection.
+        </p>
+        <div class="card-actions">
+          <a href="https://github.com/shatabdi-pal" class="btn-code" target="_blank">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 6 -->
+    <div class="project-card">
+      <div class="card-top">
+        <span class="project-num">06</span>
+        <span class="lang-badge">Data Eng · GCP · 2023</span>
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">TriMet Data Pipeline</h2>
+        <p class="card-desc">
+          Built a data engineering pipeline to extract, clean, validate, integrate, and visualize 
+          TriMet bus data for the Portland metro area. Configured a GCP Linux VM to parse breadcrumb 
+          data into Kafka topics, built a Confluent Kafka consumer for daily ingestion into a database, 
+          and created a secondary pipeline integrating transit stops with breadcrumb data.
+        </p>
+        <div class="card-actions">
+          <a href="https://github.com/shatabdi-pal" class="btn-code" target="_blank">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 7 -->
+    <div class="project-card">
+      <div class="card-top">
+        <span class="project-num">07</span>
+        <span class="lang-badge">ML · Python · 2022</span>
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">Binary Classification for Diabetes Detection</h2>
+        <p class="card-desc">
+          Performed data cleaning and handled missing values to prepare a diabetes dataset for ML 
+          model training. Employed multiple machine learning techniques and evaluated a multilayer 
+          perceptron against a Bayesian classifier, comparing their performance in predicting diabetes 
+          based on diagnostic measures.
+        </p>
+        <div class="card-actions">
+          <a href="https://github.com/shatabdi-pal" class="btn-code" target="_blank">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 8 -->
+    <div class="project-card">
+      <div class="card-top">
+        <span class="project-num">08</span>
+        <span class="lang-badge">DB · SQL · 2022</span>
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">Health Database from U.S. Census Data</h2>
+        <p class="card-desc">
+          Designed and built a health-domain database using United States Census Bureau data. 
+          Enabled users to analyze how different demographic groups were affected by the COVID-19 
+          pandemic, providing data-driven insights into the pandemic's impact across various populations.
+        </p>
+        <div class="card-actions">
+          <a href="https://github.com/shatabdi-pal" class="btn-code" target="_blank">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 Shatabdi Pal</p>
+    <p>Predoctoral Student · Health &amp; Clinical Informatics · OHSU</p>
+  </footer>
+
+  <script>
+    // no modals needed
+  </script>
+
+</body>
+</html>

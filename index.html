@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home | Shatabdi Pal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #1a2e1c;
+      --cream: #f4f9f4;
+      --warm: #e8f2e9;
+      --accent: #267040;
+      --accent-light: #4caf6e;
+      --muted: #3d6647;
+      --nav-bg: #1a3a22;
+      --serif: 'Cormorant Garamond', Georgia, serif;
+      --sans: 'DM Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--ink);
+      color: var(--cream);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--nav-bg);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 0 2.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      height: 64px;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+    }
+
+    .nav-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--accent);
+      flex-shrink: 0;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 0.25rem;
+      list-style: none;
+      margin-left: auto;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      color: rgba(255,255,255,.75);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      transition: color .2s, background .2s;
+    }
+    .nav-links a:hover { color: #fff; background: rgba(255,255,255,.07); }
+    .nav-links a.active { color: var(--accent); }
+
+    .dropdown { position: relative; }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      background: #1a3a22;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 8px;
+      overflow: hidden;
+      min-width: 160px;
+      box-shadow: 0 12px 32px rgba(0,0,0,.5);
+    }
+    .dropdown:hover .dropdown-menu { display: block; }
+    .dropdown-menu a {
+      display: block;
+      padding: 0.6rem 1rem;
+      color: rgba(255,255,255,.75);
+      font-size: 0.78rem;
+      text-transform: none;
+      letter-spacing: 0;
+      border-radius: 0;
+    }
+    .dropdown-menu a:hover { background: rgba(255,255,255,.07); color: #fff; }
+
+    /* ── HERO / CAROUSEL ── */
+    .carousel-section {
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 1s ease;
+      pointer-events: none;
+    }
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transform: scale(1.04);
+      transition: transform 7s ease;
+    }
+    .slide.active img { transform: scale(1); }
+
+    .slide-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(26,58,34,.82) 0%,
+        rgba(26,58,34,.45) 50%,
+        rgba(26,58,34,.2) 100%
+      );
+    }
+
+    .slide-content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 8vw;
+      padding-top: 64px;
+    }
+
+    .slide-eyebrow {
+      font-size: 0.72rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity .8s .2s ease, transform .8s .2s ease;
+    }
+    .slide-eyebrow::before {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 1px;
+      background: var(--accent);
+    }
+    .slide.active .slide-eyebrow {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .slide-title {
+      font-family: var(--serif);
+      font-weight: 300;
+      font-size: clamp(3.5rem, 8vw, 8rem);
+      line-height: 1.0;
+      color: #fff;
+      margin-bottom: 1rem;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .9s .35s ease, transform .9s .35s ease;
+    }
+    .slide-title em {
+      font-style: italic;
+      color: var(--accent-light);
+    }
+    .slide.active .slide-title { opacity: 1; transform: translateY(0); }
+
+    .slide-sub {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(1.1rem, 2vw, 1.5rem);
+      color: rgba(255,255,255,.6);
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity .8s .5s ease, transform .8s .5s ease;
+    }
+    .slide.active .slide-sub { opacity: 1; transform: translateY(0); }
+
+    .slide-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+      font-size: 0.78rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--cream);
+      border: 1px solid rgba(255,255,255,.3);
+      padding: 0.75rem 1.75rem;
+      border-radius: 100px;
+      width: fit-content;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity .8s .65s ease, transform .8s .65s ease, border-color .25s, color .25s, background .25s;
+    }
+    .slide.active .slide-cta { opacity: 1; transform: translateY(0); }
+    .slide-cta:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(46,125,70,.08);
+    }
+
+    /* ── CAROUSEL CONTROLS ── */
+    .carousel-controls {
+      position: absolute;
+      bottom: 2.5rem;
+      right: 3rem;
+      display: flex;
+      gap: 0.75rem;
+      z-index: 10;
+    }
+
+    .ctrl-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.25);
+      background: rgba(26,58,34,.55);
+      color: rgba(255,255,255,.7);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color .2s, color .2s, background .2s;
+      backdrop-filter: blur(4px);
+    }
+    .ctrl-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(46,125,70,.1);
+    }
+
+    .carousel-dots {
+      position: absolute;
+      bottom: 3rem;
+      left: 8vw;
+      display: flex;
+      gap: 0.5rem;
+      z-index: 10;
+    }
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.3);
+      cursor: pointer;
+      transition: background .3s, transform .3s;
+    }
+    .dot.active {
+      background: var(--accent);
+      transform: scale(1.4);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--nav-bg);
+      padding: 1.25rem 2.5rem;
+      border-top: 1px solid rgba(255,255,255,.05);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    footer p {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,.75);
+      letter-spacing: .05em;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      nav { padding: 0 1rem; }
+      .nav-links a { font-size: .72rem; padding: .35rem .5rem; }
+      .slide-content { padding: 0 6vw; padding-top: 64px; }
+      .carousel-controls { right: 1.5rem; bottom: 1.75rem; }
+      .carousel-dots { left: 6vw; bottom: 1.75rem; }
+      footer { flex-direction: column; gap: .4rem; text-align: center; padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <img class="nav-logo" src="myLogo.jpg" alt="Logo" />
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="aboutme.html">About</a></li>
+      <li class="dropdown">
+        <a href="work.html">Work ▾</a>
+        <ul class="dropdown-menu">
+          <li><a href="work.html#education">Education</a></li>
+          <li><a href="work.html#skills">Technical Skills</a></li>
+          <li><a href="work.html#work">Work</a></li>
+          <li><a href="work.html#internship">Internship</a></li>
+        </ul>
+      </li>
+      <li><a href="project.html">Projects</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- CAROUSEL -->
+  <main class="carousel-section">
+
+    <!-- Slide 1 -->
+    <div class="slide active" id="slide-0">
+      <img src="Slide1.JPG" alt="Slide 1" />
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <span class="slide-eyebrow">Welcome</span>
+        <h1 class="slide-title">Hello,<br/><em>World 👋</em></h1>
+        <p class="slide-sub">Welcome to my portfolio</p>
+        <a href="aboutme.html" class="slide-cta">
+          Learn about me
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="slide" id="slide-1">
+      <img src="Slide2.JPG" alt="Slide 2" />
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <span class="slide-eyebrow">Portfolio</span>
+        <h1 class="slide-title">I am<br/><em>Shatabdi Pal</em></h1>
+        <p class="slide-sub">Clinical Informaticist · Data Scientist · Software Engineer</p>
+        <a href="project.html" class="slide-cta">
+          View my work
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Dots -->
+    <div class="carousel-dots">
+      <div class="dot active" onclick="goTo(0)"></div>
+      <div class="dot" onclick="goTo(1)"></div>
+    </div>
+
+    <!-- Prev / Next -->
+    <div class="carousel-controls">
+      <button class="ctrl-btn" onclick="prev()" aria-label="Previous">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+        </svg>
+      </button>
+      <button class="ctrl-btn" onclick="next()" aria-label="Next">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+        </svg>
+      </button>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 Shatabdi Pal</p>
+    <p>Predoctoral Student · Health &amp; Clinical Informatics · OHSU</p>
+  </footer>
+
+  <script>
+    const total = 2;
+    let current = 0;
+    let timer;
+
+    function goTo(n) {
+      document.getElementById('slide-' + current).classList.remove('active');
+      document.querySelectorAll('.dot')[current].classList.remove('active');
+      current = (n + total) % total;
+      document.getElementById('slide-' + current).classList.add('active');
+      document.querySelectorAll('.dot')[current].classList.add('active');
+      resetTimer();
+    }
+
+    function next() { goTo(current + 1); }
+    function prev() { goTo(current - 1); }
+
+    function resetTimer() {
+      clearInterval(timer);
+      timer = setInterval(() => goTo(current + 1), 5500);
+    }
+
+    resetTimer();
+  </script>
+
+</body>
+</html>
